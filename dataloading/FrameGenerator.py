@@ -70,11 +70,6 @@ class FrameGenerator(keras.utils.Sequence):
             img = np.asarray(Image.open(ID))
             img = img / 255
             img = (img - self.mean) / self.std
-            if self.augmentation==True:
-                img = self.augment_image(img)
-            if self.augmentation==False:
-                print("validation")
-                img = img
             X[i,] = img
             # Store class
             y[i] = self.labels[ID]
