@@ -70,8 +70,10 @@ class FrameGenerator(keras.utils.Sequence):
             img = np.asarray(Image.open(ID))
             img = img / 255
             img = (img - self.mean) / self.std
+            img = tf.image.random_crop(img, size=(224, 224, 3))
             X[i,] = img
             # Store class
             y[i] = self.labels[ID]
-        return X, y
+        yy = np.eye(7)[y]
+        return X, yy
 

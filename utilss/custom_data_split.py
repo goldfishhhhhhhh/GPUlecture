@@ -1,9 +1,8 @@
 import  random
-def custom_data_split(seed,numfolders, images_path_sep_folders, label_list_sep_folders, dataset_split_percentage):
-    random.seed(seed)
+def custom_data_split(numfolders, images_path_sep_folders, label_list_sep_folders, dataset_split_percentage):
     datasplit_share = dataset_split_percentage/100 # This define how many percentage of dataset is training and validation split.
     folder_indexes = list(range(numfolders))
-    random.shuffle(folder_indexes)
+    #random.shuffle(folder_indexes)
     training_data_folders = folder_indexes[:int(numfolders * datasplit_share)]
     validation_data_folders = folder_indexes[int(numfolders * datasplit_share):]
     training_paths = []
