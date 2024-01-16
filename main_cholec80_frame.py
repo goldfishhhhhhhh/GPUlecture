@@ -26,6 +26,7 @@ def main():
     config.batch_size = 64
     config.dataset_split_percentage = 50
     config.epochs = 25
+    config.seed = 40
 
     # define split share and number of classes
     num_classes = 7
@@ -40,7 +41,7 @@ def main():
     if len(images_path_sep_folders) == len(label_list_sep_folders): numfolders = len(images_path_sep_folders)
 
     # Split the data
-    train_data, validation_data = custom_data_split(numfolders, images_path_sep_folders, label_list_sep_folders, config.dataset_split_percentage)
+    train_data, validation_data = custom_data_split(config.seed, numfolders, images_path_sep_folders, label_list_sep_folders, config.dataset_split_percentage)
 
     # Initialize dictionaries
     partition = {'train': [], 'validation': []}
@@ -100,8 +101,8 @@ def main():
               validation_data=validation_generator,
               epochs=config.epochs,
               #callbacks=[CustomCallback())
-              callbacks=[WandbCallback(save_model=False), ModelCheckpoint(filepath="check_points\\{epoch:02d}-{val_accuracy:.2f}.keras", save_best_only=True)])
-              #callbacks=[CustomCallback(), ModelCheckpoint("{epoch:02d}-{val_loss:.2f}.keras", save_best_only=True)])
+              # callbacks=[WandbCallback(save_model=False), ModelCheckpoint(filepath="check_points\\{epoch:02d}-{val_accuracy:.2f}.keras", save_best_only=True)])
+              callbacks=[CustomCallback(), ModelCheckpoint("{epoch:02d}-{val_loss:.2f}.keras", save_best_only=True)])
     wandb.finish()
 
 if __name__ == '__main__':
