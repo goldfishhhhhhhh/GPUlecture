@@ -13,35 +13,28 @@ from sklearn.metrics import classification_report
 # keras imports
 from keras.callbacks import ModelCheckpoint
 import tensorflow as tf
-# wandb imports
-import wandb
-from wandb.keras import WandbCallback
+
 
 
 def main():
-    # Weights and Biases configues
-    wandb.init(project='cholec80_keras', entity='ali-baharimalayeri')
-    config = wandb.config
-    config.learning_rate = 0.00005
-    config.batch_size = 32
-    config.dataset_split_percentage = 60
-    config.epochs = 25
-    #config.seed = 20
+    learning_rate = 0.00005
+    batch_size = 32
+    dataset_split_percentage = 60
+    epochs = 25
 
     # define split share and number of classes
     num_classes = 7
     print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # This will hide the warnings
     tf.get_logger().setLevel('ERROR')  # This will hide the warnings but show errors
-    wandb.login
 
     # Dataset Path
-    data_dir = Path("E:\\Ali\\December2023\\video_frames_250\\")
+    data_dir = Path(".\\dataset\\video_frames_224\\")
     path_list, images_path_sep_folders, label_list_sep_folders = path_label_list(data_dir)
     if len(images_path_sep_folders) == len(label_list_sep_folders): numfolders = len(images_path_sep_folders)
 
     # Split the data
-    train_data, validation_data = custom_data_split(numfolders, images_path_sep_folders, label_list_sep_folders, config.dataset_split_percentage)
+    train_data, validation_data = custom_data_split(numfolders, images_path_sep_folders, label_list_sep_folders, dataset_split_percentage)
 
     # Initialize dictionaries
     partition = {'train': [], 'validation': []}
@@ -65,7 +58,7 @@ def main():
 
     # Parameters
     params = {'dim': (224,224),
-              'batch_size': config.batch_size,
+              'batch_size': batch_size,
               'n_classes': num_classes,
               'n_channels': 3,
               'shuffle': True}
@@ -81,7 +74,7 @@ def main():
     model.summary()
 
     # compile the model
-    adam_optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
+    adam_optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
     model.compile(optimizer=adam_optimizer,
                   loss=tf.keras.losses.CategoricalCrossentropy(from_logits=False),
                   metrics=['accuracy'])
@@ -100,12 +93,11 @@ def main():
     #Training Procedure
     model.fit(training_generator,
               validation_data=validation_generator,
-              epochs=config.epochs,
+              epochs=epochs,
               # callbacks=[CustomCallback())
               # callbacks=[ModelCheckpoint(filepath="check_points\\{epoch:02d}-{val_accuracy:.2f}.keras", save_best_only=True)])
-              callbacks=[WandbCallback(save_model=False), ModelCheckpoint(filepath="check_points\\{epoch:02d}-{val_accuracy:.2f}.keras", save_best_only=True)])
-              # callbacks=[CustomCallback(), ModelCheckpoint("{epoch:02d}-{val_loss:.2f}.keras", save_best_only=True)])
-    #wandb.finish()
+              # callbacks=[WandbCallback(save_model=False), ModelCheckpoint(filepath="check_points\\{epoch:02d}-{val_accuracy:.2f}.keras", save_best_only=True)])
+              callbacks=[CustomCallback(), ModelCheckpoint("{epoch:02d}-{val_loss:.2f}.keras", save_best_only=True)])
 
 if __name__ == '__main__':
     main()
