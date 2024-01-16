@@ -3,3 +3,4 @@ __pycache__
 video_frames_224
 wandb
 dataset
+check_points
