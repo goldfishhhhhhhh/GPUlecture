@@ -36,7 +36,7 @@ def main():
     wandb.login
 
     # Dataset Path
-    data_dir = Path("E:\\Ali\\December2023\\video_frames_224\\")
+    data_dir = Path(".\\dataset\\video_frames_224\\")
     path_list, images_path_sep_folders, label_list_sep_folders = path_label_list(data_dir)
     if len(images_path_sep_folders) == len(label_list_sep_folders): numfolders = len(images_path_sep_folders)
 
@@ -102,7 +102,7 @@ def main():
               epochs=config.epochs,
               #callbacks=[CustomCallback())
               # callbacks=[WandbCallback(save_model=False), ModelCheckpoint(filepath="check_points\\{epoch:02d}-{val_accuracy:.2f}.keras", save_best_only=True)])
-              callbacks=[CustomCallback(), ModelCheckpoint("{epoch:02d}-{val_loss:.2f}.keras", save_best_only=True)])
+              callbacks=[CustomCallback(), ModelCheckpoint(".\\check_points\\{epoch:02d}-{val_loss:.2f}.keras", save_best_only=True)])
     wandb.finish()
 
 if __name__ == '__main__':

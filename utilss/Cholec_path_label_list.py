@@ -38,7 +38,7 @@ def path_label_list(data_path):
 
     combined_label_list = []
     combined_label_list_sep_folders = []
-    phase_labels_file_path_list = list(Path('E:\\Ali\\December2023\\phase_annotations\\').glob('*'))
+    phase_labels_file_path_list = list(Path('.\\dataset\\phase_annotations\\').glob('*'))
     for number_label_file in range(len(folders_path)):
         label_file_path = phase_labels_file_path_list[number_label_file]
         label_list = create_label_list(label_file_path, label_mapping)
